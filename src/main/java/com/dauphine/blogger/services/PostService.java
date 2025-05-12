@@ -1,4 +1,22 @@
 package com.dauphine.blogger.services;
 
+import com.dauphine.blogger.models.Category;
+import com.dauphine.blogger.models.Post;
+
+import java.util.List;
+import java.util.UUID;
+
 public interface PostService {
+
+    List<Post> getAllByCategoryId(UUID categoryId);
+
+    List<Post> getAll();
+
+    Post getById(UUID Id);
+
+    Post create(String title, String content, Category category);
+
+    Post update(UUID Id, String title, String content);
+
+    boolean deleteById(UUID Id);
 }
