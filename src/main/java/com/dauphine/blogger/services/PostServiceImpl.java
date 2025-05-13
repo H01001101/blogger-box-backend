@@ -5,7 +5,6 @@ import com.dauphine.blogger.models.Post;
 import com.dauphine.blogger.repositories.PostRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
