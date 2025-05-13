@@ -28,8 +28,11 @@ public class PostController {
     }
 
     @GetMapping
-    public List<Post> getAll() {
-        return service.getAll();
+    public List<Post> getAllPosts(@RequestParam(required = false) String value) {
+        List<Post> posts = value == null || value.isBlank()
+                ? service.getAll()
+                : service.getAllByTitleOrContent(value);
+        return posts;
     }
 
     @GetMapping("/{id}")

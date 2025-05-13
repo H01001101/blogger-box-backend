@@ -2,6 +2,7 @@ package com.dauphine.blogger.controllers;
 
 import com.dauphine.blogger.ElementRequest;
 import com.dauphine.blogger.models.Category;
+import com.dauphine.blogger.repositories.CategoryRepository;
 import com.dauphine.blogger.services.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -21,8 +22,15 @@ public class CategoryController {
     }
 
     @GetMapping
-    public List<Category> retrieveAllCategories() {
-        return service.getAll();
+    @Operation(
+            summary = "Get all categories",
+            description = "Retrieve all categories or filter like name"
+    )
+    public List<Category> getAll(@RequestParam(required = false) String name) {
+        List<Category> categories = name == null || name.isBlank()
+                ? service.getAll()
+                : service.findAllLikeName(name);
+        return categories;
     }
 
     @GetMapping("/{id}")

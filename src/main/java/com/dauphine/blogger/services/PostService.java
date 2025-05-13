@@ -19,4 +19,6 @@ public interface PostService {
     Post update(UUID Id, String title, String content);
 
     boolean deleteById(UUID Id);
+
+    List<Post> getAllByTitleOrContent(String value);
 }
