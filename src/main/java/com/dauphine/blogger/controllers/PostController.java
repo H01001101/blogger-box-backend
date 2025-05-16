@@ -1,7 +1,10 @@
 package com.dauphine.blogger.controllers;
 
+import com.dauphine.blogger.dto.CreationPostRequest;
+import com.dauphine.blogger.dto.UpdatePostRequest;
 import com.dauphine.blogger.models.Category;
 import com.dauphine.blogger.models.Post;
+import com.dauphine.blogger.services.CategoryService;
 import com.dauphine.blogger.services.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,7 +19,13 @@ import java.util.UUID;
 @RequestMapping("/v1/posts")
 public class PostController {
 
-    private PostService service;
+    private final PostService service;
+    private final CategoryService categoryService;
+
+    public PostController(PostService service, CategoryService categoryService) {
+        this.service = service;
+        this.categoryService = categoryService;
+    }
 
     @GetMapping
     @Operation(summary = "Get all posts", description = "Returns a list of all posts")
@@ -40,8 +49,18 @@ public class PostController {
 
     @PostMapping
     @Operation(summary = "Create a new post", description = "Creates a new post")
-    public ResponseEntity<Post> createPost(@Parameter(description = "Post to create") @RequestBody String title, @RequestBody String content, @RequestBody Category category) {
-        Post createdPost = service.create(title, content, category);
+    public ResponseEntity<Post> createPost(@RequestBody CreationPostRequest request) {
+        Category category = categoryService.findByName(request.getCategoryTitle());
+        if (category == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        Post createdPost = service.create(
+                request.getTitle(),
+                request.getContent(),
+                category,
+                request.getCreatedDate()
+        );
         return ResponseEntity.status(HttpStatus.CREATED).body(createdPost);
     }
 
@@ -49,8 +68,8 @@ public class PostController {
     @Operation(summary = "Update an existing post", description = "Updates an existing post by its ID")
     public ResponseEntity<Post> updatePost(
             @Parameter(description = "ID of the post to update") @PathVariable UUID id,
-            @Parameter(description = "Updated post data") @RequestBody String newTitle, @RequestBody String newContent) {
-        Post updatedPost = service.update(id, newTitle, newContent);
+            @Parameter(description = "Updated post data") @RequestBody UpdatePostRequest request) {
+        Post updatedPost = service.update(id, request.getTitle(), request.getContent());
         if (updatedPost == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

@@ -16,11 +16,11 @@ public class Category {
     private UUID id;
 
     @Column(name = "name")
-    private String title;
+    private String name;
 
-    public Category(String title) {
+    public Category(String name) {
         this.id = UUID.randomUUID();
-        this.title = title;
+        this.name = name;
     }
 
     public Category() {
@@ -35,10 +35,10 @@ public class Category {
     }
 
     public String getTitle() {
-        return title;
+        return name;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setTitle(String name) {
+        this.name = name;
     }
 }

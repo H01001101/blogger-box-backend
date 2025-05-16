@@ -2,9 +2,12 @@ package com.dauphine.blogger.services;
 
 import com.dauphine.blogger.models.Category;
 import com.dauphine.blogger.models.Post;
+import com.dauphine.blogger.repositories.CategoryRepository;
 import com.dauphine.blogger.repositories.PostRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,14 +15,16 @@ import java.util.UUID;
 public class PostServiceImpl implements PostService {
 
     private final PostRepository repository;
+    private final CategoryRepository categoryRepository;
 
-    public PostServiceImpl(PostRepository repository) {
+    public PostServiceImpl(PostRepository repository, CategoryRepository categoryRepository) {
         this.repository = repository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
     public List<Post> getAllByCategoryId(UUID categoryId) {
-        return repository.findAll(); //TODO revoir cette méthode
+        return repository.findByCategory_Id(categoryId);
     }
 
     @Override
@@ -32,8 +37,9 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post create(String title, String content, Category category) {
+    public Post create(String title, String content, Category category, LocalDateTime createdDate) {
         Post post = new Post(content, title, category);
+        post.setCreatedDate(createdDate != null ? createdDate : LocalDateTime.now());
         return repository.save(post);
     }
 

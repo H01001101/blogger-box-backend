@@ -51,4 +51,9 @@ public class CategoryServiceImpl implements CategoryService {
     public List<Category> findAllLikeName(String name) {
         return repository.findAllLikeName(name);
     }
+
+    @Override
+    public Category findByName(String name) {
+        return repository.findByName(name).orElse(null);
+    }
 }

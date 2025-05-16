@@ -22,11 +22,11 @@ public class Post {
     private String content;
 
     @Column(name = "created_date")
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdDate;
 
     @ManyToOne
-    @Column(name = "category_id")
+    @JoinColumn(name = "category_id")
     private Category category;
 
     public Post(String title, String content, Category category) {
